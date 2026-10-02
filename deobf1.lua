@@ -2,7 +2,7 @@
 
 local t1 = {}
 local t2 = {
-	value1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/trustedscript/slayers-2-script-opensource/refs/heads/main/amhub_ui.lua?v=2"))(),
+	value1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/trustedscript/slayers-2-script-opensource/refs/heads/main/translator.lua?v=2"))(),
 	value2 = game:GetService("Players"),
 	value3 = game:GetService("Workspace")
 }
