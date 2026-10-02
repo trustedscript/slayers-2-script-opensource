@@ -1,4 +1,4 @@
--- This file was generated at discord.gg/syncrypt
+
 
 local t1 = {}
 local t2 = {
