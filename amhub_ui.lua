@@ -1,7 +1,7 @@
 -- amhub_ui.lua
 -- Provides the AM HUB lib API on top of the Tiki Hub SimpleUI library.
 
-local URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/tiki_ui.lua"
+local URL = "https://raw.githubusercontent.com/trustedscript/slayers-2-script-opensource/refs/heads/main/tiki_ui.lua"
 
 local src = game:HttpGet(URL)
 if type(src) ~= "string" or #src < 100 then
