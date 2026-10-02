@@ -1,12 +1,28 @@
 -- amhub_ui.lua
 -- Provides the AM HUB lib API on top of the Tiki Hub SimpleUI library.
 
-local TikiLib = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/tiki_ui.lua"
-))()
+local URL = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/tiki_ui.lua"
 
-assert(type(TikiLib) == "table" and TikiLib.CreateWindow,
-    "Tiki UI library failed to load")
+local src = game:HttpGet(URL)
+if type(src) ~= "string" or #src < 100 then
+    error("[amhub_ui] fetched content too short (probably 404):\n" .. tostring(src):sub(1, 300), 0)
+end
+
+local chunk, err = loadstring(src, "=tiki_ui")
+if not chunk then
+    error("[amhub_ui] tiki_ui.lua syntax error: " .. tostring(err), 0)
+end
+
+local ok, TikiLib = pcall(chunk)
+if not ok then
+    error("[amhub_ui] tiki_ui.lua runtime error: " .. tostring(TikiLib), 0)
+end
+
+if type(TikiLib) ~= "table" or not TikiLib.CreateWindow then
+    error("[amhub_ui] tiki_ui.lua did not return the Library table. " ..
+          "Check that the last line of tiki_ui.lua is 'return Library'. " ..
+          "Got: " .. typeof(TikiLib), 0)
+end
 
 local shim = {}
 
@@ -25,7 +41,6 @@ function shim.CreateWindow(_, config)
 
     function proxy:AddTab(name, icon)
         local tab = win:AddTab(name, icon)
-        -- AM HUB is flat: one implicit section per tab.
         local section = tab:AddSection("")
         local tp = { __tab = tab, __section = section }
 
@@ -94,5 +109,8 @@ function shim:Notify(title, text, duration)
         Kind     = "info",
     })
 end
+
+-- kill the floating butterflies if you don't want them
+pcall(function() TikiLib:SetButterflies(false) end)
 
 return shim
