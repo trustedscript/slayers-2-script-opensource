@@ -1,4 +1,4 @@
-local __uiSource = [==============[--[[
+
 =======================================================================
   Tiki Hub — Slayers 2 Full Build
   Backend: supplied Tiki HUB/Cryptic/Slayers 2 script
