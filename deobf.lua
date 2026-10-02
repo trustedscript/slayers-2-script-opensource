@@ -58,44 +58,40 @@ local function v7(p3, p4)
     return v21
 end
 local function v8(p5, p6)
-    local u26
-    local u27
+    local dragging = false
+    local dragInput
+    local startMouse
+    local startPos
+
     p5.InputBegan:Connect(function(input)
-        local v218 = input.UserInputType == Enum.UserInputType.MouseButton1
-
-        if not v218 then
-            v218 = input.UserInputType == Enum.UserInputType.Touch
-        end
-
-        if v218 then
-            u26 = true
-
-            local _ = input.Position
-            local _ = p6.Position
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            startMouse = input.Position
+            startPos = p6.Position
 
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
-                    u26 = false
+                    dragging = false
                 end
             end)
         end
     end)
+
     p5.InputChanged:Connect(function(input)
-        local v222 = input.UserInputType == Enum.UserInputType.MouseMovement
-
-        if not v222 then
-            v222 = input.UserInputType == Enum.UserInputType.Touch
-        end
-
-        if v222 then
-            u27 = input
+        if input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
         end
     end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input == u27 and u26 then
-            local v224 = input.Position - nil
 
-            p6.Position = UDim2.new((nil).X.Scale, (nil).X.Offset + v224.X, (nil).Y.Scale, (nil).Y.Offset + v224.Y)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - startMouse
+            p6.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + delta.X,
+                startPos.Y.Scale, startPos.Y.Offset + delta.Y
+            )
         end
     end)
 end
@@ -242,240 +238,7 @@ function t1.CreateWindow(_, p8)
         end)
     end
     local v51 = false
-    local ok, result = pcall(function()
-        return game:HttpGet("https://hxrqxprsyynrhckewkkn.supabase.co/functions/v1/key-system-status")
-    end)
-    local v54 = result
-    if ok and v54 then
-        local ok2, result2 = pcall(function()
-            return HttpService:JSONDecode(v54)
-        end)
-        if ok2 then
-            ok2 = result2 and type(result2.enabled) == "boolean"
-        end
-        if ok2 then
-            v51 = result2.enabled
-        end
-    end
-    if v51 then
-        local v57 = false
 
-        if not gethwid then
-            function gethwid()
-                return game:GetService("Players").LocalPlayer.UserId
-            end
-        end
-
-        if iscclosure and gethwid and iscclosure(gethwid) == false then
-            function gethwid()
-                return game:GetService("Players").LocalPlayer.UserId
-            end
-        end
-
-        local s1 = ""
-
-        pcall(function()
-            s1 = gethwid and gethwid() or ""
-        end)
-
-        local function v59(p13)
-            local ok3, result3 = pcall(function()
-                return game:HttpGet("https://hxrqxprsyynrhckewkkn.supabase.co/functions/v1/verify?key=" .. tostring(p13) .. "&hwid=" .. tostring(s1))
-            end)
-            local v263 = result3
-
-            if ok3 then
-                local ok4, result4 = pcall(function()
-                    return HttpService:JSONDecode(v263)
-                end)
-
-                if ok4 then
-                    if result4 then
-                        result4 = result4.status == "success"
-                    end
-
-                    ok4 = result4
-                end
-
-                if ok4 then
-                    return true
-                end
-            end
-
-            return false
-        end
-
-        if v6 and isfile(v37) and v59((readfile(v37))) then
-            v57 = true
-        end
-
-        if not v57 then
-            local BindableEvent = Instance.new("BindableEvent")
-            local v61 = v7
-            local color3 = Color3.fromRGB(16, 14, 9)
-            local uDim2_9 = UDim2.new(0, 420, 0, 220)
-            local uDim2_10 = UDim2.new(0.5, 0, 0.5, 0)
-            local vector2_2 = Vector2.new(0.5, 0.5)
-            local v66 = v61("Frame", {
-				Parent = v41,
-				BackgroundColor3 = color3,
-				Size = uDim2_9,
-				Position = uDim2_10,
-				AnchorPoint = vector2_2,
-				ClipsDescendants = true
-			})
-            local v67 = v7
-            local uDim4 = UDim.new(0, 6)
-
-            v67("UICorner", {
-				Parent = v66,
-				CornerRadius = uDim4
-			})
-
-            local v69 = v7
-            local color3_3 = Color3.fromRGB(40, 40, 40)
-
-            v69("UIStroke", {
-				Parent = v66,
-				Color = color3_3,
-				Thickness = 1
-			})
-            v8(v66, v66)
-
-            local v71 = v7
-            local uDim2_11 = UDim2.new(1, 0, 0, 45)
-            local GothamBold = Enum.Font.GothamBold
-
-            v71("TextLabel", {
-				Parent = v66,
-				BackgroundTransparency = 1,
-				Size = uDim2_11,
-				Font = GothamBold,
-				Text = "Key System",
-				TextColor3 = v32,
-				TextSize = 18
-			})
-
-            local v74 = v7
-            local color3_4 = Color3.fromRGB(20, 20, 20)
-            local uDim2_12 = UDim2.new(1, -50, 0, 45)
-            local uDim2_13 = UDim2.new(0, 25, 0, 70)
-            local Gotham = Enum.Font.Gotham
-            local color3_5 = Color3.fromRGB(255, 255, 255)
-            local v80 = v74("TextBox", {
-				Parent = v66,
-				BackgroundColor3 = color3_4,
-				Size = uDim2_12,
-				Position = uDim2_13,
-				Font = Gotham,
-				Text = "",
-				PlaceholderText = "Key here ! / Chave aqui !",
-				TextColor3 = color3_5,
-				TextSize = 14
-			})
-            local v81 = v7
-            local uDim5 = UDim.new(0, 4)
-
-            v81("UICorner", {
-				Parent = v80,
-				CornerRadius = uDim5
-			})
-
-            local v83 = v7
-            local color3_6 = Color3.fromRGB(60, 60, 60)
-
-            v83("UIStroke", {
-				Parent = v80,
-				Color = color3_6,
-				Thickness = 1
-			})
-
-            local v85 = v7
-            local color3_7 = Color3.fromRGB(30, 30, 30)
-            local uDim2_14 = UDim2.new(0.5, -30, 0, 40)
-            local uDim2_15 = UDim2.new(0, 25, 0, 145)
-            local Gotham2 = Enum.Font.Gotham
-            local color3_8 = Color3.fromRGB(255, 255, 255)
-            local v91 = v85("TextButton", {
-				Parent = v66,
-				BackgroundColor3 = color3_7,
-				Size = uDim2_14,
-				Position = uDim2_15,
-				Font = Gotham2,
-				Text = "Link",
-				TextColor3 = color3_8,
-				TextSize = 14
-			})
-            local v92 = v7
-            local uDim6 = UDim.new(0, 4)
-
-            v92("UICorner", {
-				Parent = v91,
-				CornerRadius = uDim6
-			})
-
-            local v94 = v7
-            local uDim2_16 = UDim2.new(0.5, -30, 0, 40)
-            local uDim2_17 = UDim2.new(0.5, 5, 0, 145)
-            local GothamBold2 = Enum.Font.GothamBold
-            local color3_9 = Color3.fromRGB(0, 0, 0)
-            local v99 = v94("TextButton", {
-				Parent = v66,
-				BackgroundColor3 = v32,
-				Size = uDim2_16,
-				Position = uDim2_17,
-				Font = GothamBold2,
-				Text = "Check",
-				TextColor3 = color3_9,
-				TextSize = 14
-			})
-            local v100 = v7
-            local uDim7 = UDim.new(0, 4)
-
-            v100("UICorner", {
-				Parent = v99,
-				CornerRadius = uDim7
-			})
-            v91.MouseButton1Click:Connect(function()
-                local v266 = toclipboard or setclipboard
-
-                if v266 then
-                    v266("https://amhub-key.vercel.app")
-                    t1:Notify("Sucesso", "Link copiado para a área de transferência!", 3)
-
-                    return
-                end
-
-                t1:Notify("Erro", "Executor não suporta toclipboard", 3)
-            end)
-            v99.MouseButton1Click:Connect(function()
-                v99.Text = "..."
-
-                local Text = v80.Text
-
-                if v59(Text) then
-                    if v6 then
-                        writefile(v37, Text)
-                    end
-
-                    t1:Notify("Sucesso", "Key Autenticada! Carregando...", 3)
-                    TweenService:Create(v66, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-						Size = UDim2.new(0, 0, 0, 0)
-					}):Play()
-                    task.wait(0.4)
-                    v66:Destroy()
-                    BindableEvent:Fire()
-
-                    return
-                end
-
-                v99.Text = "Check"
-                t1:Notify("Erro", "Invalid Key / Key Invalida", 3)
-            end)
-            BindableEvent.Event:Wait()
-            BindableEvent:Destroy()
-        end
-    end
     local v102 = v7
     local color3 = Color3.fromRGB(16, 14, 9)
     local v104 = v35 and 0.1 or 0
